@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palu — CTO</title>
+  <meta name="description"
+    content="Palu is a playful, community-driven meme token. Zero tax, liquidity locked, and fun-first vibes. Join the pack." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./assets/paluslog.png" />
+  <link rel="preload" href="./assets/BubbleBobble.otf" as="font" type="font/otf" crossorigin>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Baloo+2:wght@400..800&family=Nunito:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["BubbleBobble", 'Bubblegum Sans', 'Baloo 2', 'ui-sans-serif', 'system-ui'],
+            sans: ['Nunito', 'ui-sans-serif', 'system-ui'],
+          },
+          colors: {
+            brand: '#F5BF02',
+            ink: '#0B0B0B',
+            card: '#FFFFFF',
+          },
+          boxShadow: {
+            bubble: '0 10px 30px rgba(0, 0, 0, 0.08)',
+            glow: '0 0 0 6px rgba(245, 191, 2, 0.25)',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    @font-face {
+      font-family: 'BubbleBobble';
+      src: url('./assets/BubbleBobble.otf') format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Ensure our display font is applied even if Tailwind runtime fails */
+    .font-display {
+      font-family: 'BubbleBobble', 'Bubblegum Sans', 'Baloo 2', ui-sans-serif, system-ui;
+      font-weight: 400;
+    }
+
+    .gradient-bg {
+      background: #FFFFFF;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.04;
+      mix-blend-mode: multiply;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100%\' height=\'100%\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'4\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.6\'/></svg>');
+    }
+
+    .sticker-frame {
+      background: #ffffff;
+      border: 4px solid #0B0B0B;
+      border-radius: 28px;
+      box-shadow: 0 10px 0 0 #0B0B0B;
+    }
+
+    .shadow-chunky {
+      box-shadow: 0 8px 0 0 #0B0B0B;
+    }
+
+    /* Carousel Styles */
+    .carousel-nav-btn {
+      background: #fff;
+      border: 4px solid #0B0B0B;
+      border-radius: 9999px;
+      padding: 1rem;
+      transition: transform 200ms ease, background 200ms ease, color 200ms ease;
+      box-shadow: 0 8px 0 0 #0B0B0B;
+    }
+
+    .carousel-slide {
+      flex: 0 0 calc(100% / 3);
+      display: flex;
+    }
+
+    #carouselContainer {
+      width: auto;
+      align-items: stretch;
+    }
+
+    @media (max-width: 768px) {
+      .carousel-slide {
+        flex-basis: 100%;
+      }
+
+      #carouselContainer {
+        width: auto;
+      }
+    }
+
+
+  </style>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Motion One (Framer) for non-React Framer animations -->
+  <script src="https://cdn.jsdelivr.net/npm/@motionone/dom/dist/motion-one.umd.min.js" defer></script>
+  <!-- Web3 for on-chain stats -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js" defer></script>
+</head>
+
+<body class="gradient-bg text-ink antialiased selection:bg-brand/30 selection:text-ink">
+  <div class="noise"></div>
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-40 bg-white/90 border-b-4 border-ink">
+    <div class="mx-auto max-w-7xl px-4 md:px-8">
+      <div class="flex items-center justify-between py-4">
+        <a href="#home" class="inline-flex items-center">
+          <img src="./assets/paluslog.png" alt="Palu Logo" class="h-10" />
+        </a>
+        <nav class="hidden md:flex items-center md:gap-1 gap-3 font-display text-lg md:text-xl">
+          <a href="#about" data-i18n="nav.about"
+            class="text-ink bg-white rounded-full px-4 py-2 border-4 border-ink hover:bg-brand hover:text-ink transition">About</a>
+          <a href="#token" data-i18n="nav.token"
+            class="text-ink bg-white rounded-full px-4 py-2 border-4 border-ink hover:bg-brand hover:text-ink transition">Tokenomics</a>
+
+          <a href="#community" data-i18n="nav.community"
+            class="text-ink bg-white rounded-full px-4 py-2 border-4 border-ink hover:bg-brand hover:text-ink transition">Community</a>
+        </nav>
+        <div class="flex items-center gap-3">
+          <div class="flex md:flex items-center gap-1 mr-1" aria-label="Language switcher">
+            <button data-lang="en" id="lang-en"
+              class="font-display text-ink bg-white rounded-full px-3 py-1.5 border-4 border-ink hover:bg-brand transition">EN</button>
+            <button data-lang="zh" id="lang-zh"
+              class="font-display text-ink bg-white rounded-full px-3 py-1.5 border-4 border-ink hover:bg-brand transition">中文</button>
+          </div>
+          <a href="https://four.meme/token/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483" target="_blank"
+            rel="noopener noreferrer" data-bouncy
+            class="hidden md:inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2 font-extrabold text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition">
+            <span data-i18n="nav.buy">Buy PALU</span>
+          </a>
+          <button id="menuToggle"
+            class="inline-flex md:hidden items-center justify-center rounded-xl border-4 border-ink bg-white p-2"
+            aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-ink" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="md:hidden hidden border-b-4 border-ink bg-white overflow-hidden">
+    <div id="mobileMenuInner" class="mx-auto max-w-7xl px-4 py-4 space-y-3">
+      <a href="#about" class="block text-xl text-ink bg-white rounded-xl px-4 py-3 border-4 border-ink font-display"
+        data-i18n="nav.about">About</a>
+      <a href="#token" class="block text-xl text-ink bg-white rounded-xl px-4 py-3 border-4 border-ink font-display"
+        data-i18n="nav.token">Tokenomics</a>
+      <a href="#community" class="block text-xl text-ink bg-white rounded-xl px-4 py-3 border-4 border-ink font-display"
+        data-i18n="nav.community">Community</a>
+      <a href="https://four.meme/token/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483" target="_blank"
+        rel="noopener noreferrer"
+        class="block text-center text-xl bg-brand text-ink rounded-xl px-4 py-3 border-4 border-ink font-extrabold"
+        data-i18n="nav.buy">Buy PALU</a>
+    </div>
+  </div>
+
+
+
+  <!-- Hero -->
+  <main id="home" class="relative">
+    <section class="mx-auto max-w-7xl px-4 md:px-8 pt-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-2">
+
+        <div class="flex flex-col col-span-1 lg:col-span-5 xl:col-span-4 justify-center">
+          <div class="text-center lg:text-left lg:py-10 lg:pb-20">
+            <h1 class="font-display text-9xl xl:text-[12rem] leading-none">
+              <span class="block">$PALU</span>
+            </h1>
+            <p class="text-ink/80 text-base sm:text-lg md:text-xl max-w-xl mx-auto lg:mx-0 mt-4 md:mt-6"
+              data-i18n="hero.tagline">Palu is a playful, community-first meme token on BNB Chain.
+              Zero tax, liquidity locked, and built for fun. Learn, build, and meme with us.</p>
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-4 md:pt-6">
+              <a href="https://four.meme/token/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483" target="_blank"
+                rel="noopener noreferrer" data-bouncy
+                class="inline-flex items-center gap-2 rounded-full bg-brand px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-extrabold text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition"><span
+                  data-i18n="hero.buyOnBnb">Buy on BNB</span></a>
+
+              <button id="copyContract" data-bouncy
+                class="inline-flex items-center gap-2 rounded-full bg-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-extrabold text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition"><span
+                  data-i18n="hero.copy">Copy Contract</span></button>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="flex items-center justify-center lg:justify-start gap-4 pt-6">
+              <a href="https://t.me/palubsc" target="_blank" rel="noopener noreferrer" data-bouncy
+                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-ink hover:bg-brand transition-all duration-200 hover:-translate-y-0.5">
+                <svg class="w-6 h-6 text-ink" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+              </a>
+              <a href="https://x.com/palubsc" target="_blank" rel="noopener noreferrer" data-bouncy
+                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-ink hover:bg-brand transition-all duration-200 hover:-translate-y-0.5">
+                <svg class="w-6 h-6 text-ink" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://dexscreener.com/bsc/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483" target="_blank" rel="noopener noreferrer" data-bouncy
+                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-ink hover:bg-brand transition-all duration-200 hover:-translate-y-0.5">
+                <img src="./assets/dex-screener.svg" alt="Dexscreener" class="w-6 h-6" />
+              </a>
+              <a href="https://coinmarketcap.com/currencies/binances-palu/" target="_blank" rel="noopener noreferrer" data-bouncy
+                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white border-4 border-ink hover:bg-brand transition-all duration-200 hover:-translate-y-0.5">
+                <img src="./assets/cmc.svg" alt="CoinMarketCap" class="w-6 h-6" />
+              </a>
+            </div>
+            <div
+              class="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-ink pt-4 md:pt-6 justify-center lg:justify-start">
+              <span class="inline-flex items-center font-bold gap-2 bg-white px-2 py-1" data-i18n="badges.tax">0%
+                Tax</span> <span class="py-1">/</span>
+              <span class="inline-flex items-center font-bold gap-2 bg-white px-2 py-1" data-i18n="badges.liq">Liquidity
+                Locked</span> <span class="py-1">/</span>
+              <span class="inline-flex items-center font-bold gap-2 bg-white px-2 py-1"
+                data-i18n="badges.renounced">Contract Renounced</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative flex justify-center lg:justify-end items-center lg:items-end col-span-1 lg:col-span-7 xl:col-span-8 ">
+          <img id="heroImg" src="./assets/palu-head.webp" alt="Palu Character"
+            class="w-full md:max-w-2xl lg:max-w-none" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Ticker under Hero -->
+    <section aria-hidden="true" class="overflow-hidden border-y-4 border-ink bg-brand">
+      <div class="relative">
+        <div
+          class="marquee flex whitespace-nowrap py-3 text-xs sm:text-sm md:text-base leading-tight font-black tracking-wider text-ink will-change-transform">
+          <div class="flex flex-none shrink-0 min-w-full gap-6 sm:gap-8 px-4 sm:px-6 justify-between">
+            <p data-i18n="ticker.part1">$PALU • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED</p>
+            <p class="text-ink/80" data-i18n="ticker.part2">BNB CHAIN • FUN-FIRST • EDUCATION • TOOLS • VIBES</p>
+            <p data-i18n="ticker.part3">JOIN THE PACK • DYOR • MEMES • GOOD ENERGY</p>
+          </div>
+          <div class="flex flex-none shrink-0 min-w-full gap-6 sm:gap-8 px-4 sm:px-6 justify-between"
+            aria-hidden="true">
+            <p data-i18n="ticker.part1">$PALU • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED</p>
+            <p class="text-ink/80" data-i18n="ticker.part2">BNB CHAIN • FUN-FIRST • EDUCATION • TOOLS • VIBES</p>
+            <p data-i18n="ticker.part3">JOIN THE PACK • DYOR • MEMES • GOOD ENERGY</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-20">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="md:col-span-1">
+          <h2 class="font-display text-5xl sm:text-6xl md:text-7xl" data-i18n="about.title">Welcome to PALU</h2>
+          <p class="text-ink/70 mt-3" data-i18n="about.blurb">A community-owned meme token focused on vibes, education,
+            and building fun tools
+            for the BNB Chain ecosystem.</p>
+        </div>
+        <div class="md:col-span-2 grid sm:grid-cols-2 gap-6">
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <h3 class="font-display text-3xl text-ink mb-2" data-i18n="about.card1Title">Community First</h3>
+            <p class="text-ink/70" data-i18n="about.card1Body">We ship experiences together: open collaboration,
+              transparent decisions, and meme magic.</p>
+          </div>
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <h3 class="font-display text-3xl text-ink mb-2" data-i18n="about.card2Title">Secure & Simple</h3>
+            <p class="text-ink/70" data-i18n="about.card2Body">0% tax, liquidity locked, and a renounced contract. Fun
+              without friction.</p>
+          </div>
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <h3 class="font-display text-3xl text-ink mb-2" data-i18n="about.card3Title">Education</h3>
+            <p class="text-ink/70" data-i18n="about.card3Body">Guides and content that help everyone learn crypto safely
+              and confidently.</p>
+          </div>
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <h3 class="font-display text-3xl text-ink mb-2" data-i18n="about.card4Title">Builders Welcome</h3>
+            <p class="text-ink/70" data-i18n="about.card4Body">We support tools, integrations, and creative projects
+              that grow the ecosystem.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tokenomics -->
+    <section id="token" class="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-20">
+      <div class="rounded-3xl border-4 border-ink bg-brand p-6 md:p-10">
+        <div class="flex flex-col lg:flex-row md:items-center md:justify-between gap-2">
+          <div>
+            <h2 class="font-display text-5xl sm:text-6xl md:text-7xl mb-3" data-i18n="token.title">Contract & Token Info
+            </h2>
+            <p class="text-ink/70" data-i18n="token.safu">SAFU: 0% TAX / LIQUIDITY LOCKED / CONTRACT RENOUNCED</p>
+          </div>
+          <div class="w-full md:w-auto">
+            <div class="group relative flex items-center rounded-2xl border-4 border-ink bg-white gap-4 px-3 py-2.5">
+              <code id="contractText"
+                class="truncate text-sm md:text-base text-ink">0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483</code>
+              <button id="copyContract2"
+                class="font-display ml-auto rounded-xl bg-brand px-3 py-2 text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition"
+                data-i18n="token.copy">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="rounded-2xl bg-white border-4 border-ink p-5">
+            <div class="text-ink" data-i18n="token.ticker">Ticker</div>
+            <div class="font-display text-3xl text-ink">$PALU</div>
+          </div>
+          <div class="rounded-2xl bg-white border-4 border-ink p-5">
+            <div class="text-ink" data-i18n="token.chain">Chain</div>
+            <div class="font-display text-3xl text-ink">BNB</div>
+          </div>
+          <div class="rounded-2xl bg-white border-4 border-ink p-5">
+            <div class="text-ink" data-i18n="token.tax">Tax</div>
+            <div class="font-display text-3xl text-ink">0%</div>
+          </div>
+          <div class="rounded-2xl bg-white border-4 border-ink p-5">
+            <div class="text-ink" data-i18n="token.supply">Supply</div>
+            <div class="font-display text-3xl text-ink">1,000,000,000</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buy -->
+    <section id="buy" class="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="rounded-3xl border-4 border-ink bg-white p-6 md:p-10">
+          <h2 class="font-display text-5xl sm:text-6xl md:text-7xl" data-i18n="buy.title">How to buy $PALU</h2>
+          <ol class="mt-5 space-y-3 text-ink/80 list-decimal list-inside">
+            <li data-i18n="buy.step1">Install Binance Wallet or use your preferred EVM wallet.</li>
+            <li data-i18n="buy.step2">Switch to BNB Chain (BSC) network.</li>
+            <li data-i18n="buy.step3">Get BNB for gas and swapping.</li>
+            <li data-i18n="buy.step4">Go to your favorite DEX, paste our contract, and swap.</li>
+          </ol>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="https://four.meme/token/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483" target="_blank"
+              rel="noopener noreferrer" data-bouncy data-i18n="buy.openDex"
+              class="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 font-extrabold text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition">Open
+              DEX</a>
+            <a href="#token" data-bouncy data-i18n="buy.seeToken"
+              class="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-extrabold text-ink border-4 border-ink shadow-chunky hover:-translate-y-0.5 transition">See
+              Token Info</a>
+            <p class="mt-4 text-xs text-ink/60" data-i18n="buy.disclaimer">Always verify the contract address before
+              trading. DYOR.</p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="">
+            <img id="buyImage" src="./assets/palu1.png" alt="Buy Palu"
+              class="relative rounded-2xl h-auto w-[520px] max-w-full" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ticker between Token and Buy -->
+    <section aria-hidden="true" class="overflow-hidden border-y-4 border-ink bg-brand">
+      <div class="relative">
+        <div
+          class="marquee flex whitespace-nowrap py-3 text-xs sm:text-sm md:text-base leading-tight font-black tracking-wider text-ink will-change-transform">
+          <div class="flex flex-none shrink-0 min-w-full gap-6 sm:gap-8 px-4 sm:px-6 justify-between">
+            <p data-i18n="ticker.part1">$PALU • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED</p>
+            <p class="text-ink/80" data-i18n="ticker.part2">BNB CHAIN • FUN-FIRST • EDUCATION • TOOLS • VIBES</p>
+            <p data-i18n="ticker.part3">JOIN THE PACK • DYOR • MEMES • GOOD ENERGY</p>
+          </div>
+          <div class="flex flex-none shrink-0 min-w-full gap-6 sm:gap-8 px-4 sm:px-6 justify-between"
+            aria-hidden="true">
+            <p data-i18n="ticker.part1">$PALU • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED</p>
+            <p class="text-ink/80" data-i18n="ticker.part2">BNB CHAIN • FUN-FIRST • EDUCATION • TOOLS • VIBES</p>
+            <p data-i18n="ticker.part3">JOIN THE PACK • DYOR • MEMES • GOOD ENERGY</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Token Stats (Styled to match site) -->
+    <section id="stats" class="mx-auto max-w-7xl px-4 md:px-8 pt-14 md:pb-10 md:pt-20">
+      <div class="rounded-3xl border-4 border-ink bg-brand p-6 md:p-10">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6 border-b-4 border-ink/10 pb-6 mb-8">
+          <h2 class="font-display text-5xl sm:text-6xl md:text-7xl" data-i18n="stats.title">$PALU Token Stats</h2>
+          <div id="refreshIndicator"
+            class="inline-flex items-center gap-2 rounded-full px-4 py-2 border-4 border-ink text-ink bg-white font-bold text-sm">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-ink" id="refreshDot"></span>
+            <span class="refresh-text" data-i18n="stats.loading">Loading...</span>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <div class="text-ink/70 mb-1 font-bold" data-i18n="stats.circulatingTitle">Circulating Supply</div>
+            <div class="font-display text-4xl text-ink min-h-[36px]" id="circulatingSupply">—</div>
+            <div class="text-ink/60 text-sm" data-i18n="stats.circulatingDesc">PALU in circulation</div>
+          </div>
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <div class="text-ink/70 mb-1 font-bold" data-i18n="stats.burnedTitle">Burned Supply</div>
+            <div class="font-display text-4xl text-ink min-h-[36px]" id="burnedSupply">—</div>
+            <div class="text-ink/60 text-sm" data-i18n="stats.burnedDesc">Tokens burned</div>
+          </div>
+          <div class="feature-card rounded-3xl border-4 border-ink bg-white p-6">
+            <div class="text-ink/70 mb-1 font-bold" data-i18n="stats.lastBurnTitle">Last Burn Event</div>
+            <div class="font-display text-4xl text-ink min-h-[36px]" id="lastBurn">—</div>
+            <div class="text-ink/60 text-sm" id="lastBurnAmount" data-i18n="stats.amountLoading">Loading...</div>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-ink/70">
+          <div class="flex items-center gap-2">
+            <span class="font-bold" data-i18n="stats.contractLabel">Contract:</span>
+            <a class="underline decoration-ink decoration-4 underline-offset-4 hover:opacity-80" target="_blank"
+              href="https://bscscan.com/token/0xb75a7e8876df49a74cc4c76c6bda161a8ea4b483">0xb75a...4b483</a>
+          </div>
+          <div id="lastUpdated" data-i18n="stats.lastUpdatedNever">Last updated: Never</div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Twitter Meme Posts -->
+    <section id="memes" class="mx-auto max-w-7xl px-4 md:px-8 py-14 md:py-20">
+      <div class="mb-12">
+        <div class="flex items-end justify-between mb-4">
+          <div class="flex-1">
+            <h2 class="font-display text-5xl sm:text-6xl md:text-7xl" data-i18n="memes.title">Palu Memes</h2>
+            <p class="text-ink/70 text-lg md:text-xl max-w-2xl mt-4" data-i18n="memes.subtitle">Check out Palu memes and
+              post mentions!</p>
+          </div>
+          <div class="flex items-end gap-4">
+            <button id="prevBtn" class="carousel-nav-btn border-4 border-ink bg-white text-ink px-4 py-2 rounded-full"
+              aria-label="Previous posts">
+              <i class="fa-solid fa-chevron-left text-2xl"></i>
+            </button>
+            <button id="nextBtn" class="carousel-nav-btn border-4 border-ink bg-white text-ink px-4 py-2 rounded-full"
+              aria-label="Next posts">
+              <i class="fa-solid fa-chevron-right text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative overflow-hidden">
+        <div id="carouselContainer" class="flex items-stretch transition-transform duration-700 ease-in-out">
+          <!-- Post 0 (New - Thanks to Crypto) -->
+          <div class="carousel-slide px-2">
+            <a href="#" target="_blank" rel="noopener noreferrer"
+              class="block h-full flex">
+              <div
+                class="feature-card rounded-3xl border-4 border-ink bg-white p-6 hover:scale-[1.02] transition-transform cursor-pointer h-full flex flex-col">
+                <div class="mb-4">
+                  <img src="./assets/post-4.jpg" alt="Palu Meme - Thanks to Crypto"
+                    class="w-full aspect-[4/3] object-cover rounded-2xl border-2 border-ink" />
+                </div>
+                <div class="mb-4 flex-grow">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img src="./assets/profile-image.jpg" alt="@palubsc profile" class="w-8 h-8 rounded-lg" />
+                    <p class="text-ink/80 text-sm font-semibold">@palubsc</p>
+                  </div>
+                  <p class="text-ink text-base" data-i18n="memes.post0Content">Day 472, thanks to crypto (Palu BNB new high version) 👀</p>
+                  <p class="text-ink mt-2" data-i18n="memes.post0Contest">⬇️ Create your own "thanks to crypto" with the same background and post it The 5 most creative entries will receive an 88U reward 🧧</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 bg-ink text-white px-4 py-2 rounded-full mt-auto">
+                  <i class="fa-brands fa-x-twitter"></i>
+                  <span data-i18n="memes.viewPost">View Post</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Post 1 (Previously Post 0) -->
+          <div class="carousel-slide px-2">
+            <a href="https://x.com/binancezh/status/1954694375541551609" target="_blank" rel="noopener noreferrer"
+              class="block h-full flex">
+              <div
+                class="feature-card rounded-3xl border-4 border-ink bg-white p-6 hover:scale-[1.02] transition-transform cursor-pointer h-full flex flex-col">
+                <div class="mb-4">
+                  <img src="./assets/post-0.jpg" alt="Palu Meme 0"
+                    class="w-full aspect-[4/3] object-cover rounded-2xl border-2 border-ink" />
+                </div>
+                <div class="mb-4 flex-grow">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img src="./assets/profile-image.jpg" alt="@binancezh profile" class="w-8 h-8 rounded-lg" />
+                    <p class="text-ink/80 text-sm font-semibold">@binancezh</p>
+                  </div>
+                  <p class="text-ink text-base" data-i18n="memes.post4Content">GM☕️周一早，今天你 #币安 了吗？</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 bg-ink text-white px-4 py-2 rounded-full mt-auto">
+                  <i class="fa-brands fa-x-twitter"></i>
+                  <span data-i18n="memes.viewPost">View Post</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Post 1 -->
+          <div class="carousel-slide px-2">
+            <a href="https://x.com/binancezh/status/1900455846183633406" target="_blank" rel="noopener noreferrer"
+              class="block h-full flex">
+              <div
+                class="feature-card rounded-3xl border-4 border-ink bg-white p-6 hover:scale-[1.02] transition-transform cursor-pointer h-full flex flex-col">
+                <div class="mb-4">
+                  <img src="./assets/post-1.jpg" alt="Palu Meme 1"
+                    class="w-full aspect-[4/3] object-cover rounded-2xl border-2 border-ink" />
+                </div>
+                <div class="mb-4 flex-grow">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img src="./assets/profile-image.jpg" alt="@binancezh profile" class="w-8 h-8 rounded-lg" />
+                    <p class="text-ink/80 text-sm font-semibold">@binancezh</p>
+                  </div>
+                  <p class="text-ink text-base" data-i18n="memes.post1Content">Day 351，摊牌了不装了，#Web3帕鲁 我就是图上的神秘第八人😎</p>
+                  <p class="text-ink/60 text-xs mt-2" data-i18n="memes.post1Disclaimer">⚠️图片仅供娱乐，请勿当真！原图来源于 @DtDt666</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 bg-ink text-white px-4 py-2 rounded-full mt-auto">
+                  <i class="fa-brands fa-x-twitter"></i>
+                  <span data-i18n="memes.viewPost">View Post</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Post 2 -->
+          <div class="carousel-slide px-2">
+            <a href="https://x.com/binancezh/status/1951170310721642716" target="_blank" rel="noopener noreferrer"
+              class="block h-full flex">
+              <div
+                class="feature-card rounded-3xl border-4 border-ink bg-white p-6 hover:scale-[1.02] transition-transform cursor-pointer h-full flex flex-col">
+                <div class="mb-4">
+                  <img src="./assets/post-2.jpg" alt="Palu Meme 2"
+                    class="w-full aspect-[4/3] object-cover rounded-2xl border-2 border-ink" />
+                </div>
+                <div class="mb-4 flex-grow">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img src="./assets/profile-image.jpg" alt="@binancezh profile" class="w-8 h-8 rounded-lg" />
+                    <p class="text-ink/80 text-sm font-semibold">@binancezh</p>
+                  </div>
+                  <p class="text-ink text-base" data-i18n="memes.post2Content">Day 459，求帮P牛的元素在帕鲁旁边！在线等挺急的👀</p>
+                  <p class="text-ink/60 text-xs mt-2" data-i18n="memes.post2Contest">#币安PS大赛 ⬇️评论区抽一个创意图片送周边</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 bg-ink text-white px-4 py-2 rounded-full mt-auto">
+                  <i class="fa-brands fa-x-twitter"></i>
+                  <span data-i18n="memes.viewPost">View Post</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Post 3 -->
+          <div class="carousel-slide px-2">
+            <a href="https://x.com/binancezh/status/1912383187344585019" target="_blank" rel="noopener noreferrer"
+              class="block h-full flex">
+              <div
+                class="feature-card rounded-3xl border-4 border-ink bg-white p-6 hover:scale-[1.02] transition-transform cursor-pointer h-full flex flex-col">
+                <div class="mb-4">
+                  <img src="./assets/post-3.jpg" alt="Palu Meme 3"
+                    class="w-full aspect-[4/3] object-cover rounded-2xl border-2 border-ink" />
+                </div>
+                <div class="mb-4 flex-grow">
+                  <div class="flex items-center gap-3 mb-3">
+                    <img src="./assets/profile-image.jpg" alt="@binancezh profile" class="w-8 h-8 rounded-lg" />
+                    <p class="text-ink/80 text-sm font-semibold">@binancezh</p>
+                  </div>
+                  <p class="text-ink text-base" data-i18n="memes.post3Content">Day 377，🧶今天还是 #Web3帕鲁 （毛茸茸版）</p>
+                  <p class="text-ink/60 text-xs mt-2" data-i18n="memes.post3AI">还有啥 #AI 炫酷风格可以尝试？求大佬指点⬇️#NFA</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 bg-ink text-white px-4 py-2 rounded-full mt-auto">
+                  <i class="fa-brands fa-x-twitter"></i>
+                  <span data-i18n="memes.viewPost">View Post</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community -->
+    <section id="community" class="mx-auto max-w-7xl px-4 md:px-8 pb-24 md:pb-32">
+      <div class="rounded-3xl border-4 border-ink bg-brand p-8 md:p-12 text-center">
+        <img src="./assets/paluslog.png" alt="Palu Badge" class="mx-auto mb-6 h-16" />
+        <h2 class="font-display text-5xl sm:text-6xl md:text-7xl text-ink" data-i18n="community.title">Join our
+          community</h2>
+        <p class="text-ink/80 mt-2 max-w-lg mx-auto" data-i18n="community.blurb">Hang out on Telegram and X, share
+          memes, contribute ideas, and
+          help build the future of fun on BNB Chain.</p>
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <a href="https://t.me/palubsc" target="_blank" rel="noopener noreferrer" data-bouncy
+            class="font-display text-2xl rounded-full bg-white text-ink border-4 border-ink px-5 py-2.5 shadow-chunky hover:-translate-y-0.5 transition">
+            <i class="fa-brands fa-telegram mr-2"></i>
+            <span data-i18n="community.telegram">Telegram</span>
+          </a>
+          <a href="https://x.com/palubsc" target="_blank" rel="noopener noreferrer" data-bouncy
+            class="font-display text-2xl rounded-full bg-white text-ink border-4 border-ink px-5 py-2.5 shadow-chunky hover:-translate-y-0.5 transition">
+            <i class="fa-brands fa-x-twitter mr-2"></i>
+            <span data-i18n="community.twitter">Twitter</span>
+          </a>
+          <a href="https://dexscreener.com/bsc/0xc3d3521060f6866239bf5e5db5ba45d8c347366b" target="_blank"
+            rel="noopener noreferrer" data-bouncy
+            class="inline-flex items-center whitespace-nowrap font-display text-2xl rounded-full bg-white text-ink border-4 border-ink px-5 py-2.5 shadow-chunky hover:-translate-y-0.5 transition">
+            <img src="./assets/dex-screener.svg" alt="Dexscreener" class="h-6 w-6 mr-2" />
+            <span data-i18n="community.dex">Dexscreener</span>
+          </a>
+          <a href="https://coinmarketcap.com/currencies/binances-palu/" target="_blank" rel="noopener noreferrer" data-bouncy
+            class="inline-flex items-center whitespace-nowrap font-display text-2xl rounded-full bg-white text-ink border-4 border-ink px-5 py-2.5 shadow-chunky hover:-translate-y-0.5 transition">
+            <img src="./assets/cmc.svg" alt="CoinMarketCap" class="h-6 w-6 mr-2" />
+            <span data-i18n="community.cmc">CoinMarketCap</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t-4 border-ink bg-ink text-white">
+    <div class="mx-auto max-w-7xl px-4 md:px-8 py-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex flex-col md:flex-row items-center gap-3">
+          <img src="./assets/paluslog.png" alt="Palu Logo" class="h-8 " />
+          <p class="text-white/80 text-sm text-center md:text-left max-w-[300px] md:max-w-none"
+            data-i18n="footer.disclaimer">© 2025 Palu. For entertainment purposes only. No financial advice.</p>
+        </div>
+
+        <div class="flex items-center gap-4 text-2xl justify-center md:justify-end">
+          <a href="https://t.me/palubsc" target="_blank" rel="noopener noreferrer" aria-label="Telegram"
+            class="hover:opacity-80 transition"><i class="fa-brands fa-telegram"></i></a>
+          <a href="https://x.com/palubsc" target="_blank" rel="noopener noreferrer" aria-label="X"
+            class="hover:opacity-80 transition"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://dexscreener.com/bsc/0xc3d3521060f6866239bf5e5db5ba45d8c347366b" target="_blank"
+            rel="noopener noreferrer" aria-label="Dexscreener" class="hover:opacity-80 transition">
+            <img src="./assets/dex-screener-white.svg" alt="Dexscreener" class="h-6 w-6" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App JS -->
+  <script src="./script.js" defer></script>
+</body>
+
+</html>
