@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "footer.disclaimer":
         "© " +
         new Date().getFullYear() +
-        " Palu. For entertainment purposes only. No financial advice.",
+        " ChiefMemeOfficer. For entertainment purposes only. No financial advice.",
       "token.copy": "Copy",
       copied: "Copied!",
       // Stats i18n
