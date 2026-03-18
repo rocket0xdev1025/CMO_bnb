@@ -10,18 +10,18 @@ document.addEventListener("DOMContentLoaded", () => {
       "nav.token": "Tokenomics",
       "nav.eco": "Ecosystem",
       "nav.community": "Community",
-      "nav.buy": "Buy CMO",
+      "nav.buy": "Buy 金钱自由",
       "hero.tagline":
-        "ChiefMemeOfficer is a playful, community-first meme token on BNB Chain. Zero tax, liquidity locked, and built for fun. Learn, build, and meme with us.",
+        "No matter how the world changes, Binance’s original mission remains.",
       "hero.buyOnBnb": "Buy on BNB",
       "hero.copy": "Copy Contract",
-      "ticker.part1": "$CMO • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED",
+      "ticker.part1": "$金钱自由 • 0% TAX • LIQUIDITY LOCKED • COMMUNITY OWNED",
       "ticker.part2": "BNB CHAIN • FUN-FIRST • EDUCATION • TOOLS • VIBES",
       "ticker.part3": "JOIN THE PACK • DYOR • MEMES • GOOD ENERGY",
       "badges.tax": "0% Tax",
       "badges.liq": "Liquidity Locked",
       "badges.renounced": "Contract Renounced",
-      "about.title": "Welcome to CMO",
+      "about.title": "Welcome to 金钱自由",
       "about.blurb":
         "A community-owned meme token focused on vibes, education, and building fun tools for the BNB Chain ecosystem.",
       "about.card1Title": "Community First",
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "token.chain": "Chain",
       "token.tax": "Tax",
       "token.supply": "Supply",
-      "buy.title": "How to buy $CMO",
+      "buy.title": "How to buy $金钱自由",
       "buy.step1": "Install Binance Wallet or use your preferred EVM wallet.",
       "buy.step2": "Switch to BNB Chain (BSC) network.",
       "buy.step3": "Get BNB for gas and swapping.",
@@ -69,11 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "footer.disclaimer":
         "© " +
         new Date().getFullYear() +
-        " ChiefMemeOfficer. For entertainment purposes only. No financial advice.",
+        " 金钱自由. For entertainment purposes only. No financial advice.",
       "token.copy": "Copy",
       copied: "Copied!",
       // Stats i18n
-      "stats.title": "$CMO Token Stats",
+      "stats.title": "$金钱自由 Token Stats",
       "stats.loading": "Loading...",
       "stats.refreshUpdating": "Updating...",
       "stats.refreshLive": "Live",
@@ -91,8 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
       "stats.lastUpdated": "Last updated:",
       "stats.lastUpdatedNever": "Last updated: Never",
       // Memes i18n
-      "memes.title": "ChiefMemeOfficer Narrative",
-      "memes.subtitle": "Check out ChiefMemeOfficer Narrative and post mentions!",
+      "memes.title": "金钱自由 Narrative",
+      "memes.subtitle": "Check out 金钱自由 Narrative and post mentions!",
       "memes.post0Content":
         "Day 472, thanks to crypto (Palu BNB new high version) 👀",
       "memes.post0Contest":
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Palu 是一个以社区为先的趣味 BNB 链梗币。零税收、流动性锁定，专注于乐趣与建设。",
       "hero.buyOnBnb": "在 BNB 上购买",
       "hero.copy": "复制合约地址",
-      "ticker.part1": "$CMO • 0% 税收 • 流动性锁定 • 社区所有",
+      "ticker.part1": "$金钱自由 • 0% 税收 • 流动性锁定 • 社区所有",
       "ticker.part2": "BNB 链 • 乐趣至上 • 教育 • 工具 • 热情",
       "ticker.part3": "加入我们 • DYOR • 梗图 • 正能量",
       "badges.tax": "0% 税收",
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "token.chain": "链",
       "token.tax": "税收",
       "token.supply": "总量",
-      "buy.title": "如何购买 $CMO",
+      "buy.title": "如何购买 $金钱自由",
       "buy.step1": "安装 Binance 钱包或使用你偏好的 EVM 钱包。",
       "buy.step2": "切换到 BNB Chain（BSC）网络。",
       "buy.step3": "准备用于手续费与兑换的 BNB。",
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "token.copy": "复制",
       copied: "已复制！",
       // Stats i18n
-      "stats.title": "$CMO 代币统计",
+      "stats.title": "$金钱自由 代币统计",
       "stats.loading": "加载中...",
       "stats.refreshUpdating": "更新中...",
       "stats.refreshLive": "实时",
@@ -392,7 +392,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Token Stats functionality (from palu-token-stats.html adapted)
   class PaluTokenStats {
     constructor() {
-      this.tokenAddress = "0x39B7d1139Abf7Da3196c243838B0e3D3b98BE066";
+      this.tokenAddress = "0xcomingsoon";
       this.tokenSymbol = "PALU";
       this.refreshInterval = 30000;
       this.web3 = null;
